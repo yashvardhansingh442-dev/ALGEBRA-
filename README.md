@@ -2,7 +2,7 @@
 
 An open-source, community-built curriculum for learning algebra from the ground up — free, plain-language, and built by learners for learners.
 
-> **Status:** 🚧 Early stage — foundations module in progress. Contributions welcome!
+> **Status:** 🚧 Early stage — Foundations and Linear Equations modules in progress. Contributions welcome!
 
 ## Why this exists
 
@@ -13,13 +13,14 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 - **Structured** — a clear path from "what is a variable" to solving systems of equations
 - **Honest about mistakes** — every topic includes a "common mistakes" section, because that's usually where people actually get stuck
 - **Community-verified** — every problem and solution is reviewed before merging
+- **Backed by code, not just text** — a practice-problem generator with a real test suite, so "correct" is enforced by CI, not just eyeballed
 
 ## Learning path
 
 | # | Topic | Status |
 |---|-------|--------|
 | 01 | [Foundations](curriculum/01-foundations/) (integers, order of operations, variables) | 🟢 In progress |
-| 02 | Linear Equations | ⬜ Not started |
+| 02 | [Linear Equations](curriculum/02-linear-equations/) | 🟢 In progress |
 | 03 | Inequalities | ⬜ Not started |
 | 04 | Functions | ⬜ Not started |
 | 05 | Polynomials | ⬜ Not started |
@@ -30,7 +31,7 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 | 10 | Systems of Equations | ⬜ Not started |
 | 11 | Word Problems | ⬜ Not started |
 
-Each topic folder follows the same layout:
+Each topic folder follows the same layout — **always lowercase, hyphenated** (e.g. `02-linear-equations`, never `02-Linear-Equations`), to avoid case-collision issues on case-sensitive systems like GitHub/Linux:
 
 ```
 0X-topic-name/
@@ -41,23 +42,37 @@ Each topic folder follows the same layout:
 └── common-mistakes.md     ← misconceptions people actually run into
 ```
 
+## Tools
+
+Beyond the written curriculum, `tools/` has a Python-based practice problem generator and CLI quiz runner:
+
+```bash
+pip install -r requirements.txt
+python tools/cli.py --topic linear-equations --difficulty medium --count 10
+```
+
+It generates randomized, guaranteed-solvable problems (works backwards from a chosen answer, so nothing is ever unsolvable), grades your input, and shows a real step-by-step solution when you get it wrong. See [`tools/README.md`](tools/README.md) for details on extending it with new topic generators.
+
 ## How to use this repo
 
 - **Learning solo?** Start at `curriculum/01-foundations/README.md` and work through in order.
 - **Studying for a test?** Jump to the topic you need — each is self-contained.
 - **Teaching?** Fork it, remix it, use the practice problems as-is or as templates.
+- **Want drills instead of reading?** Use the CLI tool above.
 
 ## How to contribute
 
 New here and want to help? Read [CONTRIBUTING.md](CONTRIBUTING.md) — there are `good-first-issue` labeled tasks for newcomers, including "add practice problems" and "improve an explanation," which don't require deep math background to start on.
 
+All code changes run through CI (`.github/workflows/ci.yml`) — the test suite and a markdown link-checker run automatically on every PR.
+
 ## Roadmap
 
 - [ ] Finish Foundations module (v0.1)
-- [ ] Linear Equations module
-- [ ] Set up CI to check markdown formatting + broken links
+- [ ] Finish Linear Equations module (v0.1)
+- [ ] Inequalities module
 - [ ] Add visual/geometric explainer diagrams
-- [ ] Optional: simple browser-based quiz tool
+- [ ] Extend `tools/` generator to cover more topics (inequalities, quadratics, ...)
 
 ## License
 
