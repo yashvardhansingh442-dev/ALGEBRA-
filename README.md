@@ -19,7 +19,7 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 
 | # | Topic | Status |
 |---|-------|--------|
-| 01 | [Foundations](curriculum/01-foundations/) (integers, order of operations, variables) | 🟢 In progress |
+| 01 | [Foundations](01-foundations/) (integers, order of operations, variables) | 🟢 In progress |
 | 02 | [Linear Equations](curriculum/02-linear-equations/) | 🟢 In progress |
 | 03 | Inequalities | ⬜ Not started |
 | 04 | Functions | ⬜ Not started |
