@@ -1,1 +1,46 @@
+name: CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run test suite
+        run: pytest tests/ -v
+
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for broken relative links in curriculum
+        run: |
+          fail=0
+          for f in $(find curriculum -name "*.md"); do
+            dir=$(dirname "$f")
+            for link in $(grep -oE '\]\(\./[^)]+\)|\]\([a-zA-Z0-9_./-]+\.md\)' "$f" | grep -oE '\(([^)]+)\)' | tr -d '()'); do
+              if [ ! -f "$dir/$link" ] && [ ! -f "$link" ]; then
+                echo "Broken link in $f -> $link"
+                fail=1
+              fi
+            done
+          done
+          exit $fail
