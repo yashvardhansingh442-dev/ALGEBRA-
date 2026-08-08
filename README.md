@@ -2,7 +2,7 @@
 
 An open-source, community-built curriculum for learning algebra from the ground up — free, plain-language, and built by learners for learners.
 
-> **Status:** 🚧 Early stage — Foundations and Linear Equations modules in progress. Contributions welcome!
+> **Status:** 🚧 Early stage — Foundations, Linear Equations, and Inequalities modules in progress. Contributions welcome!
 
 ## Why this exists
 
@@ -19,9 +19,9 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 
 | # | Topic | Status |
 |---|-------|--------|
-| 01 | [Foundations](01-foundations/) (integers, order of operations, variables) | 🟢 In progress |
-| 02 | [Linear Equations](curriculum/02-linear-equations/) | 🟢 In progress |
-| 03 | Inequalities | ⬜ Not started |
+| 01 | [Foundations](curriculum/01-foundations) (integers, order of operations, variables) | 🟢 In progress |
+| 02 | [Linear Equations](curriculum/02-linear-equations) | 🟢 In progress |
+| 03 | [Inequalities](curriculum/03-inequalities) | 🟢 In progress |
 | 04 | Functions | ⬜ Not started |
 | 05 | Polynomials | ⬜ Not started |
 | 06 | Factoring | ⬜ Not started |
@@ -44,7 +44,7 @@ Each topic folder follows the same layout — **always lowercase, hyphenated** (
 
 ## Tools
 
-Beyond the written curriculum, `tools/` has a Python-based practice problem generator and CLI quiz runner:
+Beyond the written curriculum, [`tools`](tools) has a Python-based practice problem generator and CLI quiz runner:
 
 ```bash
 pip install -r requirements.txt
@@ -64,13 +64,14 @@ It generates randomized, guaranteed-solvable problems (works backwards from a ch
 
 New here and want to help? Read [CONTRIBUTING.md](CONTRIBUTING.md) — there are `good-first-issue` labeled tasks for newcomers, including "add practice problems" and "improve an explanation," which don't require deep math background to start on.
 
-All code changes run through CI (`.github/workflows/ci.yml`) — the test suite and a markdown link-checker run automatically on every PR.
+All code changes run through CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) — the test suite and a markdown link-checker run automatically on every PR.
 
 ## Roadmap
 
 - [ ] Finish Foundations module (v0.1)
 - [ ] Finish Linear Equations module (v0.1)
-- [ ] Inequalities module
+- [ ] Finish Inequalities module (v0.1)
+- [ ] Functions module
 - [ ] Add visual/geometric explainer diagrams
 - [ ] Extend `tools/` generator to cover more topics (inequalities, quadratics, ...)
 
