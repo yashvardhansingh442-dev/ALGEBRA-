@@ -2,7 +2,7 @@
 
 An open-source, community-built curriculum for learning algebra from the ground up — free, plain-language, and built by learners for learners.
 
-> **Status:** 🚧 Early stage — Foundations, Linear Equations, and Inequalities modules in progress. Contributions welcome!
+> **Status:** 🚧 Early stage — Foundations, Linear Equations, Inequalities, and Functions modules in progress. Contributions welcome!
 
 ## Why this exists
 
@@ -22,7 +22,7 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 | 01 | [Foundations](curriculum/01-foundations) (integers, order of operations, variables) | 🟢 In progress |
 | 02 | [Linear Equations](curriculum/02-linear-equations) | 🟢 In progress |
 | 03 | [Inequalities](curriculum/03-inequalities) | 🟢 In progress |
-| 04 | Functions | ⬜ Not started |
+| 04 | [Functions](curriculum/04-functions) | 🟢 In progress |
 | 05 | Polynomials | ⬜ Not started |
 | 06 | Factoring | ⬜ Not started |
 | 07 | Rational Expressions | ⬜ Not started |
@@ -71,7 +71,8 @@ All code changes run through CI ([`.github/workflows/ci.yml`](.github/workflows/
 - [ ] Finish Foundations module (v0.1)
 - [ ] Finish Linear Equations module (v0.1)
 - [ ] Finish Inequalities module (v0.1)
-- [ ] Functions module
+- [ ] Finish Functions module (v0.1)
+- [ ] Polynomials module
 - [ ] Add visual/geometric explainer diagrams
 - [ ] Extend `tools/` generator to cover more topics (inequalities, quadratics, ...)
 
