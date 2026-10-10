@@ -2,7 +2,7 @@
 
 An open-source, community-built curriculum for learning algebra from the ground up — free, plain-language, and built by learners for learners.
 
-> **Status:** 🚧 Early stage — Foundations, Linear Equations, Inequalities, and Functions modules in progress. Contributions welcome!
+> **Status:** 🚧 Early stage — Foundations through Factoring modules in progress. Contributions welcome!
 
 ## Why this exists
 
@@ -23,8 +23,8 @@ Most algebra resources are either locked behind paywalls, written in dense textb
 | 02 | [Linear Equations](curriculum/02-linear-equations) | 🟢 In progress |
 | 03 | [Inequalities](curriculum/03-inequalities) | 🟢 In progress |
 | 04 | [Functions](curriculum/04-functions) | 🟢 In progress |
-| 05 | Polynomials | ⬜ Not started |
-| 06 | Factoring | ⬜ Not started |
+| 05 | [Polynomials](curriculum/05-polynomials) | 🟢 In progress |
+| 06 | [Factoring](curriculum/06-factoring) | 🟢 In progress |
 | 07 | Rational Expressions | ⬜ Not started |
 | 08 | Exponents & Radicals | ⬜ Not started |
 | 09 | Quadratics | ⬜ Not started |
@@ -72,7 +72,9 @@ All code changes run through CI ([`.github/workflows/ci.yml`](.github/workflows/
 - [ ] Finish Linear Equations module (v0.1)
 - [ ] Finish Inequalities module (v0.1)
 - [ ] Finish Functions module (v0.1)
-- [ ] Polynomials module
+- [ ] Finish Polynomials module (v0.1)
+- [ ] Finish Factoring module (v0.1)
+- [ ] Rational Expressions module
 - [ ] Add visual/geometric explainer diagrams
 - [ ] Extend `tools/` generator to cover more topics (inequalities, quadratics, ...)
 
