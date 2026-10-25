@@ -21,7 +21,7 @@ A free algebra curriculum, a practice generator with exact answer checking, and 
 | Part | What it is | Status |
 |---|---|---|
 | Curriculum | Six plain-language modules, five files each | 🟢 Written, being refined |
-| Generator + CLI | Random problems with step-by-step working, exact answer checking | 🟢 Done, tested on Python 3.9, 3.11, 3.12 |
+| Generator + CLI | Random problems with step-by-step working, exact answer checking | 🟢 Done, 124 tests |
 | Link checker | Verifies every relative Markdown link and `#anchor` | 🟢 Done, runs in CI |
 | Symbolic engine | Expand, factor and solve exactly, with no SymPy | ⬜ Planned |
 | Optimization example | A constrained problem solved with the engine | ⬜ Planned |
@@ -33,33 +33,39 @@ A free algebra curriculum, a practice generator with exact answer checking, and 
 Needs Python 3.9 or newer.
 
 ```bash
-git clone https://github.com/<your-username>/ALGEBRA-.git
+git clone https://github.com/yashvardhansingh442-dev/ALGEBRA-.git
 cd ALGEBRA-
-pip install -r requirements.txt          # pytest only, needed just for the tests
-python tools/cli.py --topic linear-equations --difficulty medium --count 5
-python -m pytest tests -q
+pip install -e ".[dev]"      # installs the package, the `algebra` command, and pytest
+algebra --topic linear-equations --difficulty medium --count 5
+python -m pytest -q
 ```
+
+No install needed just to quiz yourself: from the repo root, `PYTHONPATH=src python -m algebra_tools` works too.
 
 ## Repo layout
 
 ```
 ALGEBRA-/
-├── curriculum/            the written course (one folder per module)
-├── tools/
-│   ├── algebra_tools/     importable package (generator today, symbolic engine next)
-│   ├── cli.py             terminal quiz
-│   ├── check_links.py     Markdown link checker
-│   └── README.md          library usage, how to add a topic
-├── tests/                 pytest suite
-├── .github/workflows/     CI: tests on 3.9, 3.11, 3.12, plus the link check
+├── curriculum/              the written course (one folder per module)
+├── src/
+│   └── algebra_tools/       importable package (generator and CLI today, symbolic engine next)
+│       ├── generator.py
+│       ├── cli.py
+│       └── __main__.py
+├── scripts/
+│   └── check_links.py       Markdown link checker
+├── tests/                   pytest suite
+├── docs/
+│   └── generator.md         library usage, how to add a topic
+├── .github/workflows/       CI: tests on 3.9, 3.11, 3.12, plus the link check
+├── pyproject.toml
 ├── CONTRIBUTING.md
-├── LICENSE
-└── requirements.txt
+└── LICENSE
 ```
 
 ## Curriculum
 
-Each module has the same five files: `README.md` (the concept), `worked-examples.md` (5 examples), `practice-problems.md` (15 problems, easy to hard), `solutions.md`, and `common-mistakes.md`. Folder names are lowercase and hyphenated.
+Each module has the same five files: `README.md` (the concept), `worked-examples.md` (5 examples), `practice-problems.md` (15 problems, easy to hard), `solutions.md`, and `common-mistakes.md`. Folder and file names are lowercase and hyphenated.
 
 | # | Module | You learn |
 |---|---|---|
@@ -77,7 +83,9 @@ Each module has the same five files: `README.md` (the concept), `worked-examples
 **Terminal quiz**
 
 ```bash
-python tools/cli.py --topic foundations --difficulty easy --count 5
+algebra --topic foundations --difficulty easy --count 5
+# or, without the installed command:
+python -m algebra_tools --topic foundations --difficulty easy --count 5
 ```
 
 | Flag | Values | Default |
@@ -99,13 +107,13 @@ print(problem.check("15"))      # True or False
 print(problem.solution_text())  # step-by-step working
 ```
 
-A `seed` makes output reproducible. The generator uses its own random instance and never touches your global random state. Problems are built backwards (answer first), so every one is solvable by construction. To add a topic, see [tools/README.md](tools/README.md).
+A `seed` makes output reproducible. The generator uses its own random instance and never touches your global random state. Problems are built backwards (answer first), so every one is solvable by construction. To add a topic, see [docs/generator.md](docs/generator.md).
 
 ## Roadmap
 
 - [x] Modules 01-06 written
-- [x] Generator repaired, exact checking, step-by-step working
-- [x] One-root repo layout, CI at the root, tested link checker
+- [x] Generator with exact checking and step-by-step working
+- [x] Link checker with tests
 - [ ] **Symbolic engine** (`algebra_tools/symbolic/`): parser, expansion, factoring over the rationals, exact linear systems, small nonlinear systems, complex numbers
 - [ ] Generator problems validated by the engine, plus CLI commands for it
 - [ ] Worked optimization example (Lagrange multipliers solved exactly)
@@ -117,8 +125,8 @@ The engine is exact-math infrastructure for later topics (geometry, calculus, li
 ## Tests and CI
 
 ```bash
-python -m pytest tests -q        # generator and link-checker tests
-python tools/check_links.py      # every relative link and anchor in every .md file
+python -m pytest -q              # generator and link-checker tests
+python scripts/check_links.py    # every relative link and anchor in every .md file
 ```
 
 [CI](.github/workflows/ci.yml) runs both on every push and pull request to `main`.
@@ -129,5 +137,5 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md). Easy starts: fix a typo, verify a solut
 
 ## License
 
-- **Code** (`tools/`, `tests/`): MIT
+- **Code** (`src/`, `scripts/`, `tests/`): MIT
 - **Written content** (`curriculum/`): CC-BY-SA 4.0. Credit the project and share adaptations alike.
