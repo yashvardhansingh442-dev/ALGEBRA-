@@ -1,5 +1,0 @@
-"""Make tools/ importable (algebra_tools, check_links) when running pytest from the repo root."""
-import os
-import sys
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tools"))
