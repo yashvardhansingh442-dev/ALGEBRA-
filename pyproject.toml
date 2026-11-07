@@ -1,37 +1,166 @@
+# pyproject.toml for ALGEBRA-
+# One file for packaging, linting, typing, testing, and coverage.
+# Lines marked "DECISION" are choices you should confirm before committing.
+
+# ---------------------------------------------------------------------------
+# Build system
+# ---------------------------------------------------------------------------
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
+# ---------------------------------------------------------------------------
+# Project metadata
+# ---------------------------------------------------------------------------
 [project]
 name = "algebra-tools"
 version = "0.1.0"
-description = "Algebra curriculum, practice generator and exact-math tooling. Standard library only."
+description = "A from-scratch symbolic algebra engine and practice tools that show their steps, built alongside an open algebra curriculum."
 readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "MIT" }
+requires-python = ">=3.10"
+license = { text = "MIT" }  # DECISION: match whatever LICENSE file you add
+authors = [{ name = "Yash" }]
+keywords = ["algebra", "education", "symbolic-math", "parser", "teaching"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+
+# Runtime dependencies: intentionally none. The engine uses only the
+# standard library (dataclasses, fractions, typing). See ARCHITECTURE.md §6.
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff", "mypy"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "hypothesis>=6.100",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+]
 
+[project.urls]
+Homepage = "https://github.com/yashvardhansingh442-dev/ALGEBRA-"
+Repository = "https://github.com/yashvardhansingh442-dev/ALGEBRA-"
+Issues = "https://github.com/yashvardhansingh442-dev/ALGEBRA-/issues"
+
+# DECISION: the console command. This points at algebra_tools/cli.py INSIDE the
+# package, which is the standard way to get an installable `algebra` command.
+# ARCHITECTURE.md currently places cli.py at tools/cli.py; if you keep it there
+# you can only run it as `python -m tools.cli` from the repo root, and this
+# entry point should be removed. Pick one and make both docs agree.
 [project.scripts]
 algebra = "algebra_tools.cli:main"
 
+# ---------------------------------------------------------------------------
+# Setuptools: package lives under tools/, not at the repo root
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+package-dir = { "" = "tools" }
+
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["tools"]
+include = ["algebra_tools*"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src", "scripts"]
+[tool.setuptools.package-data]
+algebra_tools = ["py.typed"]
 
+# ---------------------------------------------------------------------------
+# Ruff: lint and format
+# ---------------------------------------------------------------------------
 [tool.ruff]
-line-length = 110
-target-version = "py39"
-src = ["src", "tests", "scripts"]
+line-length = 100
+target-version = "py310"
+src = ["tools", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "B"]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # import sorting
+    "B",    # flake8-bugbear (likely bugs)
+    "UP",   # pyupgrade (modern syntax)
+    "SIM",  # flake8-simplify
+    "C4",   # flake8-comprehensions
+    "N",    # pep8-naming
+    "RUF",  # ruff-specific rules
+    "PT",   # flake8-pytest-style
+]
+ignore = [
+    "E501",  # line length is handled by the formatter
+]
 
+[tool.ruff.lint.per-file-ignores]
+# Tests may use asserts and magic numbers freely.
+"tests/**" = ["B011"]
+# Examples are teaching scripts; allow prints and a looser style.
+"examples/**" = ["T20"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["algebra_tools"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---------------------------------------------------------------------------
+# Mypy: strict typing on the package (ARCHITECTURE.md §7)
+# ---------------------------------------------------------------------------
 [tool.mypy]
+python_version = "3.10"
 strict = true
-files = ["src", "scripts"]
+files = ["tools/algebra_tools"]
+warn_unused_ignores = true
+warn_unreachable = true
+show_error_codes = true
+
+# Tests are not held to strict typing; keep them readable.
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "property: property-based tests (Hypothesis)",
+    "slow: tests that take noticeably longer to run",
+]
+
+# ---------------------------------------------------------------------------
+# Hypothesis
+# ---------------------------------------------------------------------------
+# Profiles are registered in tests/conftest.py. Select one with:
+#   pytest --hypothesis-profile=ci
+# (Suggested: "dev" = fewer examples for speed, "ci" = more examples.)
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["algebra_tools"]
+branch = true
+
+[tool.coverage.report]
+# Start at 80% (ARCHITECTURE.md §7) and raise over time.
+fail_under = 80
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
