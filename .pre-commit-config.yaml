@@ -1,0 +1,95 @@
+# .pre-commit-config.yaml for ALGEBRA-
+#
+# Catches problems before they reach CI. Mirrors the checks in
+# .github/workflows/ci.yml and the Makefile, using the settings in pyproject.toml.
+#
+# Setup (once per clone):
+#   make install     # installs the package + dev tools, including pre-commit
+#   make hooks       # installs the git hooks (pre-commit AND pre-push, see below)
+#
+# Two tiers, so commits stay fast:
+#   on every commit : whitespace/file hygiene + ruff lint + ruff format  (seconds)
+#   on every push   : mypy (strict) + pytest                             (slower)
+#
+# Useful commands:
+#   pre-commit run --all-files                    run the commit-tier hooks everywhere
+#   pre-commit run --all-files --hook-stage pre-push   run the push-tier hooks too
+#   pre-commit autoupdate                         bump the pinned versions below
+#   git commit --no-verify                        skip hooks in an emergency (CI still runs)
+#
+# The local hooks (mypy, pytest) use whatever is on your PATH, so activate the
+# virtual environment where you ran `make install` before committing/pushing.
+
+minimum_pre_commit_version: "3.2.0"
+
+# `make hooks` / `pre-commit install` installs both of these hook types.
+default_install_hook_types: [pre-commit, pre-push]
+
+# Hooks run at commit time unless a hook sets its own `stages`.
+default_stages: [pre-commit]
+
+repos:
+  # -------------------------------------------------------------------------
+  # File hygiene
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        # Two trailing spaces are a deliberate line break in markdown; keep them.
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict   # catches names that collide on case-insensitive systems
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: debug-statements      # forgotten breakpoint() / pdb
+
+  # -------------------------------------------------------------------------
+  # Ruff: lint (with safe auto-fixes) and format. Config lives in pyproject.toml.
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+
+  # -------------------------------------------------------------------------
+  # Local hooks: they need the project's own environment, so they run the tools
+  # already installed there instead of building a separate hook environment.
+  # -------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      # Strict typing on tools/algebra_tools (file list comes from pyproject.toml).
+      - id: mypy
+        name: mypy (strict)
+        entry: mypy
+        language: system
+        types: [python]
+        pass_filenames: false   # always check the whole package, as CI does
+        stages: [pre-push]
+
+      # Full test suite. Hypothesis uses its default (fast) profile here; CI
+      # runs the heavier "ci" profile.
+      - id: pytest
+        name: pytest
+        entry: pytest -q -x
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+      # Enable once scripts/check_links.py exists (Phase 2).
+      # - id: check-links
+      #   name: markdown links
+      #   entry: python scripts/check_links.py
+      #   language: system
+      #   types: [markdown]
+      #   pass_filenames: false
+      #   stages: [pre-push]
